@@ -24,6 +24,7 @@ Automate restaurant reservations and business bookings through Google Maps using
 - `agent-browser` installed: `npm install -g agent-browser`
 - Internet access
 - Optional: Pre-authenticated Google profile (see Profile Setup below)
+- Optional: Proxy server for authenticated routing (see Proxy Setup below)
 
 ## Before Starting
 
@@ -55,6 +56,30 @@ agent-browser state save ~/.reservegoogle-auth.json
 
 # In future sessions:
 agent-browser state load ~/.reservegoogle-auth.json
+agent-browser open "https://www.google.com/maps"
+```
+
+## Proxy Setup
+
+Route traffic through an authenticated proxy to avoid rate limits, geo-restrictions, or use residential IPs:
+
+```bash
+agent-browser --proxy http://user:pass@proxy.example.com:8080 open "https://www.google.com/maps"
+agent-browser --proxy socks5://user:pass@proxy.example.com:1080 open "https://www.google.com/maps"
+```
+
+The proxy flag only needs to be passed on the `open` command that starts the session. Subsequent commands in the same session reuse the proxy.
+
+Combine with profile for authenticated + proxied sessions:
+
+```bash
+agent-browser --headed --profile ~/.reservegoogle --proxy http://user:pass@proxy.example.com:8080 open "https://accounts.google.com"
+```
+
+Set via environment variable to avoid passing on every command:
+
+```bash
+export AGENT_BROWSER_PROXY="http://user:pass@proxy.example.com:8080"
 agent-browser open "https://www.google.com/maps"
 ```
 

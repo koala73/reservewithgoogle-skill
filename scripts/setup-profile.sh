@@ -12,7 +12,12 @@ echo ""
 echo "Profile location: $PROFILE_DIR"
 echo ""
 
-agent-browser --headed --profile "$PROFILE_DIR" open "https://accounts.google.com"
+PROXY_ARGS=()
+if [ -n "${AGENT_BROWSER_PROXY:-}" ]; then
+  PROXY_ARGS=(--proxy "$AGENT_BROWSER_PROXY")
+fi
+
+agent-browser --headed --profile "$PROFILE_DIR" "${PROXY_ARGS[@]}" open "https://accounts.google.com"
 
 echo ""
 echo "Browser opened. Please log in to your Google account."

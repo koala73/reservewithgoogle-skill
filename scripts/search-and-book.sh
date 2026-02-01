@@ -13,9 +13,12 @@ PHONE="${6:?Missing phone}"
 EMAIL="${7:?Missing email}"
 SPECIAL="${8:-}"
 
-PROFILE_ARGS=()
+GLOBAL_ARGS=()
 if [ -d "$PROFILE_DIR" ]; then
-  PROFILE_ARGS=(--profile "$PROFILE_DIR")
+  GLOBAL_ARGS+=(--profile "$PROFILE_DIR")
+fi
+if [ -n "${AGENT_BROWSER_PROXY:-}" ]; then
+  GLOBAL_ARGS+=(--proxy "$AGENT_BROWSER_PROXY")
 fi
 
 echo "=== Reserve with Google ==="
@@ -27,7 +30,7 @@ echo ""
 
 # Step 1: Open Maps
 echo "--- Step 1: Opening Google Maps ---"
-agent-browser "${PROFILE_ARGS[@]}" --session "$SESSION" open "https://www.google.com/maps"
+agent-browser "${GLOBAL_ARGS[@]}" --session "$SESSION" open "https://www.google.com/maps"
 agent-browser --session "$SESSION" wait --load networkidle
 
 echo "--- Step 2: Taking snapshot ---"

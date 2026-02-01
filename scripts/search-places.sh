@@ -5,14 +5,17 @@ PROFILE_DIR="$HOME/.reservegoogle"
 QUERY="${1:?Usage: search-places.sh \"search query\"}"
 SESSION="${2:-search-$$}"
 
-PROFILE_ARGS=()
+GLOBAL_ARGS=()
 if [ -d "$PROFILE_DIR" ]; then
-  PROFILE_ARGS=(--profile "$PROFILE_DIR")
+  GLOBAL_ARGS+=(--profile "$PROFILE_DIR")
+fi
+if [ -n "${AGENT_BROWSER_PROXY:-}" ]; then
+  GLOBAL_ARGS+=(--proxy "$AGENT_BROWSER_PROXY")
 fi
 
 echo "=== Searching Google Maps: $QUERY ==="
 
-agent-browser "${PROFILE_ARGS[@]}" --session "$SESSION" open "https://www.google.com/maps"
+agent-browser "${GLOBAL_ARGS[@]}" --session "$SESSION" open "https://www.google.com/maps"
 agent-browser --session "$SESSION" wait --load networkidle
 
 agent-browser --session "$SESSION" snapshot -i
