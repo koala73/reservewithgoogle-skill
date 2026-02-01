@@ -1,0 +1,59 @@
+{
+  "google_maps": {
+    "search_box": {
+      "role": "textbox",
+      "name_patterns": ["Search Google Maps", "Search", "search"]
+    },
+    "booking_buttons": {
+      "text_patterns": [
+        "Reserve a table",
+        "Book online",
+        "Book an appointment",
+        "Find a table",
+        "Schedule",
+        "Book now",
+        "Make a reservation"
+      ]
+    },
+    "confirmation_indicators": [
+      "Reservation confirmed",
+      "Booking confirmed",
+      "You're all set",
+      "Confirmation",
+      "confirmed"
+    ]
+  },
+  "opentable": {
+    "domain": "opentable.com",
+    "submit_button": ["Complete reservation", "Complete Reservation"],
+    "party_size_label": ["party size", "Party Size", "people"],
+    "time_label": ["Time", "time"],
+    "date_label": ["Date", "date"]
+  },
+  "resy": {
+    "domain": "resy.com",
+    "submit_button": ["Reserve", "Confirm", "Reserve Now"],
+    "slot_indicators": ["Dining Room", "Bar", "Patio", "Outdoor", "Indoor"]
+  },
+  "vagaro": {
+    "domain": "vagaro.com",
+    "submit_button": ["Book", "Confirm Appointment", "Book Now"],
+    "steps": ["Select Service", "Select Staff", "Select Date", "Your Info", "Confirm"]
+  },
+  "yelp": {
+    "domain": "yelp.com",
+    "submit_button": ["Confirm Reservation", "Find a Table"],
+    "party_size_label": ["Guests", "Party size"]
+  },
+  "toast": {
+    "domain": "toasttab.com",
+    "submit_button": ["Reserve", "Join Waitlist"],
+    "modes": ["reservation", "waitlist"]
+  },
+  "common_form_fields": {
+    "name": ["First name", "Last name", "Name", "Full name", "first name", "last name"],
+    "phone": ["Phone", "Phone number", "Mobile", "phone", "Tel"],
+    "email": ["Email", "Email address", "email"],
+    "special_requests": ["Special requests", "Notes", "Additional notes", "Special occasions", "Dietary"]
+  }
+}
