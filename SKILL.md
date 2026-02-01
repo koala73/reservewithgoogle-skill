@@ -19,6 +19,19 @@ allowed-tools: Bash(agent-browser:*)
 
 Automate restaurant reservations and business bookings through Google Maps using browser automation.
 
+## Quick Reference
+
+| Provider | Booking URL Pattern | Special Notes |
+|----------|---------------------|---------------|
+| **SevenRooms** | `sevenrooms.com/reservations/{venue}` | See [SEVENROUNDS.md](references/SEVENROOMS.md) |
+| OpenTable | opentable.com | Use `--headed` for best results |
+| Resy | resy.com | Often requires phone verification |
+| Yelp | yelp.com/reservations | Login usually required |
+
+**Common Issues:**
+- Title dropdown: Use `find text "Mr." click`
+- Policy checkbox: Use `find text "I agree..." click`
+
 ## Prerequisites
 
 - `agent-browser` installed: `npm install -g agent-browser`
@@ -269,3 +282,86 @@ agent-browser --session search1 --profile ~/.reservegoogle open "https://www.goo
 - [Detailed element patterns & flow docs](references/REFERENCE.md)
 - [Form templates by business type](references/FORMS.md)
 - [3rd-party provider specific flows](references/THIRD-PARTY-PROVIDERS.md)
+
+---
+
+# Lessons Learned (Feb 2026)
+
+## SevenRooms-Specific Patterns
+
+The SevenRooms booking system (used by many restaurants) has unique quirks:
+
+### Title Dropdown Issue
+**Problem:** Clicking the select button (`@e2`) doesn't always reveal options in a way `agent-browser` can interact with.
+
+**Solution:** Use text-based selection instead:
+```bash
+agent-browser find text "Mr." click
+```
+
+For ambiguous matches (multiple "Mr." elements):
+```bash
+agent-browser find text --exact "Mr." click
+```
+
+### Policy Checkbox Detection
+**Problem:** The "I agree to the venue's required policy *" checkbox element isn't exposed in snapshots as a standard checkbox.
+
+**Solution:** Click the policy text directly:
+```bash
+agent-browser find text "I agree to the venue's required policy" click
+```
+
+### Form Session Timeout
+**Problem:** Many booking systems (including SevenRooms) hold a table for ~20 minutes. If you take too long filling forms, the hold expires and you must re-select.
+
+**Solution:**
+- Fill forms quickly without overthinking
+- Re-selection flow: Back → re-select time → Continue as Guest → title → fill fields → policy → Submit
+
+### Form Field Reset Behavior
+**Observation:** Title may persist across session resets, but First Name, Last Name, Email, and Phone fields typically clear.
+
+**Solution:** Always verify and refill all form fields before final submission.
+
+### Faster Booking Script
+For repeat bookings at the same venue:
+```bash
+# Open booking page
+agent-browser open "https://www.sevenrooms.com/reservations/restaurantname"
+
+# Select date/time/guests → SEARCH
+agent-browser snapshot -i
+agent-browser click @<dateRef>
+agent-browser click @<timeRef>
+agent-browser fill @<partySizeRef> "3"
+agent-browser click @<searchButtonRef>
+agent-browser snapshot -i
+
+# Click desired time slot
+agent-browser click @<timeSlotRef>
+
+# Quick guest flow
+agent-browser find text "Continue as guest" click
+agent-browser click @<selectTitleRef>
+agent-browser find text "Mr." click
+
+# Fill and submit
+agent-browser fill @<firstNameRef> "John"
+agent-browser fill @<lastNameRef> "Doe"
+agent-browser fill @<emailRef> "john.doe@example.com"
+agent-browser fill @<phoneRef> "+1234567890"
+agent-browser find text "I agree to the venue's required policy" click
+agent-browser click @<submitRef>
+```
+
+### Element Reference Changes
+**Critical:** Element references (`@e1`, `@e2`, etc.) change on EVERY page load or interaction. Always run `snapshot` immediately before clicking.
+
+### Error Recovery Patterns
+If submit fails or hold expires:
+1. Check console logs: `agent-browser console`
+2. Look for "Released hold" messages (indicates timeout)
+3. Back out to time selection: `agent-browser click @<backRef>`
+4. Re-select same time slot
+5. Continue from guest flow
