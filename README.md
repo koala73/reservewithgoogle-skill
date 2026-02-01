@@ -36,6 +36,20 @@ agent-browser --headed --profile ~/.reservegoogle open "https://accounts.google.
 # Log in manually, then close the browser
 ```
 
+### Optional: Authenticated proxy
+
+Route traffic through an HTTP or SOCKS5 proxy with username/password authentication:
+
+```bash
+export AGENT_BROWSER_PROXY="http://user:pass@proxy.example.com:10001"
+```
+
+All scripts pick up this env var automatically. Supports formats:
+- `http://user:pass@host:port`
+- `socks5://user:pass@host:port`
+
+Add to `~/.zshrc` for persistence across terminal sessions.
+
 ## Usage
 
 Once installed, tell your AI agent:
